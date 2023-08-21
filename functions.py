@@ -107,5 +107,108 @@ class Board:
 
         return legal_moves
 
+    def set_discs(self, row: int, col: int, PLAYER: int) -> None:
+        self.board[row, col] = PLAYER
+        OPPONENT = Board.WHITE if PLAYER == Board.BLACK else Board.BLACK
+
+        # outflanking pieces on the right
+        c = col + 1
+        while c < 8 and self.board[row, c] == OPPONENT:
+            self.board[row, c] = PLAYER
+            c += 1
+        if (c != col + 1 and c < 8) and self.board[row, c] == Board.EMPTY:   # outflanking is illegal
+            c -= 1
+            while c > col:
+                self.board[row, c] = OPPONENT
+                c -= 1
+        # outflanking pieces on the left
+        c = col - 1
+        while c >= 0 and self.board[row, c] == OPPONENT:
+            self.board[row, c] = PLAYER
+            c -= 1
+        if (c != col - 1 and c >= 0) and self.board[row, c] == Board.EMPTY:   # outflanking is illegal
+            c += 1
+            while c < col:
+                self.board[row, c] = OPPONENT
+                c += 1
+
+        # outflanking pieces below
+        r = row + 1
+        while r < 8 and self.board[r, col] == OPPONENT:
+            self.board[r, col] = PLAYER
+            r += 1
+        if (r != row + 1 and r < 8) and self.board[r, col] == Board.EMPTY:   # outflanking is illegal
+            r -= 1
+            while r > row:
+                self.board[r, col] = OPPONENT
+                r -= 1
+        # outflanking pieces above
+        r = row - 1
+        while r >= 0 and self.board[r, col] == OPPONENT:
+            self.board[r, col] = PLAYER
+            r -= 1
+        if (r != row - 1 and r >= 0) and self.board[r, col] == Board.EMPTY:   # outflanking is illegal
+            r += 1
+            while r < row:
+                self.board[r, col] = OPPONENT
+                r += 1
+
+        # outflanking pieces in the diagonal from the cell towards top left
+        r = row - 1
+        c = col - 1
+        while (r >= 0 and c >= 0) and self.board[r, c] == OPPONENT:
+            self.board[r, c] = PLAYER
+            r -= 1
+            c -= 1
+        if (r != row - 1 and c != col - 1) and (r >= 0 and c >= 0) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
+            r += 1
+            c += 1
+            while (r < row and c < col) and self.board[r, c] != PLAYER:
+                self.board[r, c] = OPPONENT
+                r += 1
+                c += 1  
+        # outflanking pieces in the diagonal from the cell towards top right
+        r = row - 1
+        c = col + 1
+        while (r >= 0 and c < 8) and self.board[r, c] == OPPONENT:
+            self.board[r, c] = PLAYER
+            r -= 1
+            c += 1
+        if (r != row - 1 and c != col + 1) and (r >= 0 and c < 8) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
+            r += 1
+            c -= 1
+            while (r < row and c > col) and self.board[r, c] != PLAYER:
+                self.board[r, c] = OPPONENT
+                r += 1
+                c -= 1  
+        # outflanking pieces in the diagonal from the cell towards bottom right
+        r = row + 1
+        c = col + 1
+        while (r < 8 and c < 8) and self.board[r, c] == OPPONENT:
+            self.board[r, c] = PLAYER
+            r += 1
+            c += 1
+        if ( r != row + 1 and c != col + 1 ) and (r < 8 and c < 8) and  self.board[r, c] == Board.EMPTY:   # outflanking is illegal
+            r -= 1
+            c -= 1
+            while (r > row and c > col) and self.board[r, c] != PLAYER:
+                self.board[r, c] = OPPONENT
+                r -= 1
+                c -= 1  
+        # outflanking pieces in the diagonal from the cell towards bottom left
+        r = row + 1
+        c = col - 1
+        while (r < 8 and c >= 0) and self.board[r, c] == OPPONENT:
+            self.board[r, c] = PLAYER
+            r += 1
+            c -= 1
+        if (r != row + 1 and c != col - 1) and (r < 8 and c >= 0) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
+            r -= 1
+            c += 1
+            while (r > row and c < col) and self.board[r, c] == PLAYER:
+                self.board[r, c] = OPPONENT
+                r -= 1
+                c += 1  
+
     def print_board(self):
         print(self.board)
