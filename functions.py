@@ -116,6 +116,7 @@ class Board:
         while c < 8 and self.board[row, c] == OPPONENT:
             self.board[row, c] = PLAYER
             c += 1
+        # handle cases where col goes out of bound yet outflanking is illegal!!
         if (c != col + 1 and c < 8) and self.board[row, c] == Board.EMPTY:   # outflanking is illegal
             c -= 1
             while c > col:
