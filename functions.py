@@ -163,7 +163,7 @@ class Board:
         if (r != row - 1 and c != col - 1) and (r >= 0 and c >= 0) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
             r += 1
             c += 1
-            while (r < row and c < col) and self.board[r, c] != PLAYER:
+            while (r < row and c < col) and self.board[r, c] == PLAYER:
                 self.board[r, c] = OPPONENT
                 r += 1
                 c += 1  
@@ -177,7 +177,7 @@ class Board:
         if (r != row - 1 and c != col + 1) and (r >= 0 and c < 8) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
             r += 1
             c -= 1
-            while (r < row and c > col) and self.board[r, c] != PLAYER:
+            while (r < row and c > col) and self.board[r, c] == PLAYER:
                 self.board[r, c] = OPPONENT
                 r += 1
                 c -= 1  
@@ -188,10 +188,10 @@ class Board:
             self.board[r, c] = PLAYER
             r += 1
             c += 1
-        if ( r != row + 1 and c != col + 1 ) and (r < 8 and c < 8) and  self.board[r, c] == Board.EMPTY:   # outflanking is illegal
+        if ( r != row + 1 and c != col + 1 ) and (r < 8 and c < 8) and self.board[r, c] == Board.EMPTY:   # outflanking is illegal
             r -= 1
             c -= 1
-            while (r > row and c > col) and self.board[r, c] != PLAYER:
+            while (r > row and c > col) and self.board[r, c] == PLAYER:
                 self.board[r, c] = OPPONENT
                 r -= 1
                 c -= 1  
@@ -209,6 +209,10 @@ class Board:
                 self.board[r, c] = OPPONENT
                 r -= 1
                 c += 1  
+        
+        # update disc counters
+        self.black_disc_count = self.board[self.board > 0].sum()
+        self.white_disc_count = -self.board[self.board < 0].sum()
 
     def print_board(self):
         print(self.board)
