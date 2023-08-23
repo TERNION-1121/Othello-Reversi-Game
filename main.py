@@ -147,7 +147,7 @@ while running:
             game_end = True
 
         # blit the scores during the game
-        dummy_surface = pygame.Surface((40, 40))
+        dummy_surface = pygame.Surface((60, 40))
         dummy_surface.fill((255, 255, 255))
         screen.blit(dummy_surface, (885, 510))
         screen.blit(dummy_surface, (1060, 510))

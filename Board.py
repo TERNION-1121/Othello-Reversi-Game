@@ -209,3 +209,5 @@ class Board:
         # initiliasing the centre squares
         self.board[3, 3] = self.board[4,4] = Board.WHITE
         self.board[3, 4] = self.board[4,3] = Board.BLACK
+
+        self.black_disc_count = self.white_disc_count = 2
