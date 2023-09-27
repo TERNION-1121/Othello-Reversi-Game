@@ -221,8 +221,13 @@ class Application:
 
             if self.turn == Board.WHITE:
                 r, c = find_best_move(self.game_board)
+                if (r,c) == (20, 20):
+                    self.hasWhiteForfeited = True
+                    self.shown_moves = not self.hasWhiteForfeited
+                    self.turn *= -1
+                    continue
                 self.last_move = (r, c)
-                print(self.last_move, self.possible_moves, sep='\n')
+                print(self.last_move, self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), self.game_board.board , sep='\n')
                 self.game_board.set_discs(r, c, self.turn)
                 self.shown_moves = False
                 self.turn *= -1

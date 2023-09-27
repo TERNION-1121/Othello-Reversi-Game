@@ -216,7 +216,7 @@ class Board:
         possibleBlackMoves = self.all_legal_moves(Board.BLACK)
         possibleWhiteMoves = self.all_legal_moves(Board.WHITE)
 
-        if possibleBlackMoves != [] or possibleWhiteMoves != []:
+        if not possibleBlackMoves or not possibleWhiteMoves:
             return False
         return True
     

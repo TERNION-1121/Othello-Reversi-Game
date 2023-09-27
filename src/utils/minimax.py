@@ -11,7 +11,8 @@ def minimax(position: Board, depth: int, isMaximizingPlayer: bool) -> int:
             if position.board[row, col] == Board.EMPTY:
                 position.board[row, col] = Board.BLACK
 
-                eval = minimax(position, depth - 1, False)
+                opponents_moves = position.all_legal_moves(Board.WHITE)
+                eval = minimax(position, depth - 1, len(opponents_moves) == 0)
                 maxEval = max(maxEval, eval)
 
                 position.board[row, col] = Board.EMPTY
@@ -24,7 +25,8 @@ def minimax(position: Board, depth: int, isMaximizingPlayer: bool) -> int:
         if position.board[row, col] == Board.EMPTY:
             position.board[row, col] = Board.WHITE
 
-            eval = minimax(position, depth - 1, True)
+            opponents_moves = position.all_legal_moves(Board.BLACK)
+            eval = minimax(position, depth - 1, len(opponents_moves) != 0)
             minEval = min(minEval, eval)
 
             position.board[row, col] = Board.EMPTY
@@ -39,12 +41,11 @@ def find_best_move(position: Board) -> tuple[int, int]:
         if position.board[row, col] == Board.EMPTY:
             position.board[row, col] = Board.WHITE
 
-            currentEval = minimax(position, 2, False)
+            currentEval = minimax(position, 1, False)
 
             position.board[row, col] = Board.EMPTY
 
             if currentEval < bestEval:
                 bestMove = (row, col)
                 bestEval = currentEval
-    print(bestEval)
     return bestMove
