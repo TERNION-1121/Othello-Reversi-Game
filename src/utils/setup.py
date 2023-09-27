@@ -1,4 +1,5 @@
 from utils.board import Board
+from utils.minimax import minimax, find_best_move
 import pygame
 
 pygame.init()
@@ -217,7 +218,16 @@ class Application:
             
             if self.game_end:
                 continue  
-            
+
+            if self.turn == Board.WHITE:
+                r, c = find_best_move(self.game_board)
+                self.last_move = (r, c)
+                self.game_board.set_discs(r, c, self.turn)
+                self.possible_moves.remove((r,c))
+                self.shown_moves = False
+                self.turn *= -1
+                continue
+                
             self.displayDiscs()
             
             self.markLastMove()
