@@ -21,7 +21,6 @@ class Board:
 
     def all_legal_moves(self, PLAYER: int) -> set:
         '''Return all legal moves for the player'''
-        OPPONENT = Board.WHITE if PLAYER == Board.BLACK else Board.BLACK
 
         all_legal_moves = set()
         for row in range(8):
@@ -33,6 +32,7 @@ class Board:
 
     def legal_moves(self, row: int, col: int) -> list:
         '''Return all legal moves for the cell at the given position'''
+
         PLAYER = self.board[row, col]
         OPPONENT = Board.WHITE if PLAYER == Board.BLACK else Board.BLACK
         legal_moves = list()
