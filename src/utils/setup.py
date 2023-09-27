@@ -67,7 +67,7 @@ class Application:
                 pygame.time.delay(30)
             pygame.display.flip()
 
-    def mouseClick(self) -> None:
+    def handleMouseClick(self) -> None:
         '''Handle events following mouse click on the board'''
 
         mx, my = pygame.mouse.get_pos()
@@ -211,7 +211,7 @@ class Application:
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    self.mouseClick()
+                    self.handleMouseClick()
                 elif self.game_end and event.type == pygame.KEYDOWN:
                     self.handleGameEnd(event)
             

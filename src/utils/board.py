@@ -211,3 +211,17 @@ class Board:
         self.board[3, 4] = self.board[4,3] = Board.BLACK
 
         self.black_disc_count = self.white_disc_count = 2
+
+    def check_game_over(self) -> int:
+        possibleBlackMoves = self.all_legal_moves(Board.BLACK)
+        possibleWhiteMoves = self.all_legal_moves(Board.WHITE)
+
+        if possibleBlackMoves != [] or possibleWhiteMoves != []:
+            return
+
+        if self.black_disc_count > self.white_disc_count: # black won
+            return self.black_disc_count - self.white_disc_count
+        elif self.white_disc_count > self.black_disc_count: # white won
+            return self.black_disc_count - self.white_disc_count
+        else:
+            return 0
