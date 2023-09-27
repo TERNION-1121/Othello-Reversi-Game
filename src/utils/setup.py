@@ -99,10 +99,6 @@ class Application:
 
         if event.key not in (pygame.K_r, pygame.K_q): return
 
-        self.turn = 1
-        self.game_end = False
-        self.game_board.reset_board()
-
         # fade out the screen
         dummy_surface = pygame.Surface( (Application.SCREEN_WIDTH, 
                                             Application.SCREEN_HEIGHT  ))
@@ -112,6 +108,10 @@ class Application:
         if event.key == pygame.K_q:
             self.running = False
             return
+        
+        self.turn = 1
+        self.game_end = False
+        self.game_board.reset_board()
 
         self.screen.blit(self.boardIMG, (0,0))
         self.screen.blit(self.blackDiscCounterIMG, (775, 475))
