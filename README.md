@@ -44,7 +44,10 @@ I hope to get done with it soon..!
 P.S. If you have got any suggestions/features to add, whether it's about the two-player gameplay, or about the Othello AI itself, I would be more than grateful to you for your contribution!
 
 ### How to Play the Game 🎮
-1. Download the source code
-2. Make sure to install Python3 on your Computer along with `pip`
-3. Install the `numpy` and `pygame` libraries. To do this, open the terminal and type `pip install numpy` and `pip install pygame`. 
-4. Run the `main.py` file and play the game!
+1. Download the source code. (Either clone the repository or download the whole code from GitHub)
+2. Make sure to install Python3 on your Computer along with `pip`. (Python3.10+ is required)
+3. Open your terminal, navigate to `~/Othello-Reversi-Game` and type the command:
+   ```
+   pip install -r requirements
+   ```
+5. Navigate to the `src` directory, run the `main.py` file and play the game!
