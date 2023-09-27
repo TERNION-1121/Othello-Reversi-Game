@@ -222,8 +222,8 @@ class Application:
             if self.turn == Board.WHITE:
                 r, c = find_best_move(self.game_board)
                 self.last_move = (r, c)
+                print(self.last_move, self.possible_moves, sep='\n')
                 self.game_board.set_discs(r, c, self.turn)
-                self.possible_moves.remove((r,c))
                 self.shown_moves = False
                 self.turn *= -1
                 continue

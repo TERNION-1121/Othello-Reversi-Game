@@ -31,7 +31,7 @@ def minimax(position: Board, depth: int, isMaximizingPlayer: bool) -> int:
     return minEval
 
 def find_best_move(position: Board) -> tuple[int, int]:
-    bestMove = (-1, -1)
+    bestMove = (20, 20)
     bestEval = float('+inf')
 
     legal_moves = position.all_legal_moves(Board.WHITE)
@@ -46,4 +46,5 @@ def find_best_move(position: Board) -> tuple[int, int]:
             if currentEval < bestEval:
                 bestMove = (row, col)
                 bestEval = currentEval
+    print(bestEval)
     return bestMove
