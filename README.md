@@ -46,7 +46,12 @@ P.S. If you have got any suggestions/features to add, whether it's about the two
 Two players can play the game, alternating their turns.
 
 #### 🤖 Play with Computer
-Play with the computer! It makes use of the minimax algorithm with alpha-beta pruning. Currently it makes use of a really naive evaluation system, based on disc count.
+Play with the computer! It makes use of the minimax algorithm with alpha-beta pruning. 
+
+Currently the algorithm makes use of the following heuristics for a position's evaluation:
+- Coin parity
+- Mobility
+- Corner Values
 
 ### How to Play the Game 🎮
 1. Download the source code. (Either clone the repository or download the whole code from GitHub)
