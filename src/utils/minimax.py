@@ -1,4 +1,4 @@
-from utils.board import Board, np
+from utils.board import Board
 
 def minimax(position: Board, depth: int, isMaximizingPlayer: bool) -> int:
     if depth == 0 or position.check_game_over() is True:
@@ -41,12 +41,11 @@ def find_best_move(position: Board) -> tuple[int, int]:
         if position.board[row, col] == Board.EMPTY:
             position.board[row, col] = Board.WHITE
 
-            currentEval = minimax(position, 10, False)
+            currentEval = minimax(position, 5, False)
 
             position.board[row, col] = Board.EMPTY
 
-            if currentEval < bestEval:
+            if currentEval <= bestEval:
                 bestMove = (row, col)
                 bestEval = currentEval
-    print(bestEval)
     return bestMove

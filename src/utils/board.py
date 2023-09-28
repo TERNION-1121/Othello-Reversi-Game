@@ -109,6 +109,7 @@ class Board:
 
     def set_discs(self, row: int, col: int, PLAYER: int) -> None:
         '''Set the discs on the board as per the move made on the given cell'''
+        
         self.board[row, col] = PLAYER
         OPPONENT = Board.WHITE if PLAYER == Board.BLACK else Board.BLACK
 

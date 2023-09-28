@@ -1,5 +1,5 @@
 from utils.board import Board
-from utils.minimax import minimax, find_best_move
+from utils.minimax import find_best_move
 import pygame
 
 pygame.init()
@@ -206,22 +206,25 @@ class Application:
             Application.fade(self.screen, (self.endScreenDrawIMG, (725, 250)))
 
         Application.fade(self.screen, (self.endPromptIMG, (877, 420)))
+        print(self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), sep='\n')
         self.game_end = True
     
     def computerPlayerTurn(self) -> None:
-        if self.turn == Board.WHITE:
-            r, c = find_best_move(self.game_board)
-            if (r,c) == (20, 20):
-                self.hasWhiteForfeited = True
-                self.shown_moves = not self.hasWhiteForfeited
-            else:
-                self.last_move = (r, c)
-                print(self.last_move, self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), self.game_board.board , sep='\n')
-                self.game_board.set_discs(r, c, self.turn)
-                self.shown_moves = False
-            self.turn *= -1
+        '''Code to run when it is computer player's turn.'''
+        
+        r, c = find_best_move(self.game_board)
+        if (r,c) == (20, 20):
+            self.hasWhiteForfeited = True
+            self.shown_moves = not self.hasWhiteForfeited
+        else:
+            self.last_move = (r, c)
+            self.game_board.set_discs(r, c, self.turn)
+            self.shown_moves = False
+        self.turn *= -1
 
     def handleGameModeChoice(self, event) -> None:
+        '''Handle the events at the initial screen.'''
+
         if event.key not in (pygame.K_a, pygame.K_h):
             return
         
@@ -266,7 +269,7 @@ class Application:
             if self.game_end:
                 continue  
             
-            if self.single_player:
+            if self.single_player and self.turn == Board.WHITE:
                 self.computerPlayerTurn()
                 
             self.displayDiscs()
@@ -275,10 +278,10 @@ class Application:
 
             self.displayLegalMoves()
 
+            self.displayScore()
+
             if self.hasBlackForfeited and self.hasWhiteForfeited:
                 self.gameOverScreen()
-
-            self.displayScore()
 
             pygame.display.flip()
 
