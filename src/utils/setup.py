@@ -16,6 +16,9 @@ class Application:
         # pygame initialisations
         self.screen = pygame.display.set_mode(  (Application.SCREEN_WIDTH, 
                                                  Application.SCREEN_HEIGHT  ))
+        self.screen.fill((255, 255, 255))
+        pygame.display.flip()
+
         pygame.display.set_caption("Othello/Reversi")
 
         # image initialisations
@@ -36,14 +39,13 @@ class Application:
         self.endScreenDrawIMG = pygame.image.load("images/End_Screen_Draw.png")
         self.endPromptIMG  = pygame.image.load("images/End_Prompt.png")
 
+        self.choiceIMG = pygame.image.load("images/Othello_Game-mode_Choice.png")
+
         # font initialisation
         self.discCountFont = pygame.font.Font("Gotham-Font/GothamLight.ttf", 40)
 
-        # blitting initial board position on screen
-        self.screen.blit(self.boardIMG, (0,0))
-        self.screen.blit(self.blackDiscCounterIMG, (775, 475))
-        self.screen.blit(self.whiteDiscCounterIMG, (950, 475))
-        pygame.display.flip()
+        self.single_player = False
+        self.displayed_choice = False
 
         self.running = True
         self.game_end = False
@@ -111,6 +113,8 @@ class Application:
             return
         
         self.turn = 1
+        self.single_player = False
+        self.displayed_choice = False
         self.game_end = False
         self.game_board.reset_board()
 
@@ -203,7 +207,43 @@ class Application:
 
         Application.fade(self.screen, (self.endPromptIMG, (877, 420)))
         self.game_end = True
+    
+    def computerPlayerTurn(self) -> None:
+        if self.turn == Board.WHITE:
+            r, c = find_best_move(self.game_board)
+            if (r,c) == (20, 20):
+                self.hasWhiteForfeited = True
+                self.shown_moves = not self.hasWhiteForfeited
+            else:
+                self.last_move = (r, c)
+                print(self.last_move, self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), self.game_board.board , sep='\n')
+                self.game_board.set_discs(r, c, self.turn)
+                self.shown_moves = False
+            self.turn *= -1
+
+    def handleGameModeChoice(self, event) -> None:
+        if event.key not in (pygame.K_a, pygame.K_h):
+            return
         
+        self.single_player = (event.key == pygame.K_a)
+
+        self.displayed_choice = True
+
+        dummy_surface = pygame.Surface( (Application.SCREEN_WIDTH, 
+                                            Application.SCREEN_HEIGHT  ))
+        dummy_surface.fill((255, 255, 255))
+        Application.fade(self.screen, (dummy_surface, (0, 0)))
+
+        self.displayInitialBoardPos()
+            
+    def displayInitialBoardPos(self) -> None:
+        '''Blitting initial board position on screen'''
+
+        self.screen.blit(self.boardIMG, (0,0))
+        self.screen.blit(self.blackDiscCounterIMG, (775, 475))
+        self.screen.blit(self.whiteDiscCounterIMG, (950, 475))
+        pygame.display.flip()
+
     def game_loop(self) -> None:
         '''Game loop to run the application.'''
 
@@ -215,23 +255,19 @@ class Application:
                     self.handleMouseClick()
                 elif self.game_end and event.type == pygame.KEYDOWN:
                     self.handleGameEnd(event)
+                elif not self.displayed_choice and event.type == pygame.KEYDOWN:
+                    self.handleGameModeChoice(event)
             
+            if not self.displayed_choice:
+                self.screen.blit(self.choiceIMG, (0,0))
+                pygame.display.flip()
+                continue
+
             if self.game_end:
                 continue  
-
-            if self.turn == Board.WHITE:
-                r, c = find_best_move(self.game_board)
-                if (r,c) == (20, 20):
-                    self.hasWhiteForfeited = True
-                    self.shown_moves = not self.hasWhiteForfeited
-                    self.turn *= -1
-                    continue
-                self.last_move = (r, c)
-                print(self.last_move, self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), self.game_board.board , sep='\n')
-                self.game_board.set_discs(r, c, self.turn)
-                self.shown_moves = False
-                self.turn *= -1
-                continue
+            
+            if self.single_player:
+                self.computerPlayerTurn()
                 
             self.displayDiscs()
             

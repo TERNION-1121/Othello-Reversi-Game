@@ -41,11 +41,12 @@ def find_best_move(position: Board) -> tuple[int, int]:
         if position.board[row, col] == Board.EMPTY:
             position.board[row, col] = Board.WHITE
 
-            currentEval = minimax(position, 1, False)
+            currentEval = minimax(position, 10, False)
 
             position.board[row, col] = Board.EMPTY
 
             if currentEval < bestEval:
                 bestMove = (row, col)
                 bestEval = currentEval
+    print(bestEval)
     return bestMove
