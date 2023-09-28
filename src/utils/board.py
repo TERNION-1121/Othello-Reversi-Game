@@ -109,6 +109,7 @@ class Board:
 
     def set_discs(self, row: int, col: int, PLAYER: int) -> None:
         '''Set the discs on the board as per the move made on the given cell'''
+        
         self.board[row, col] = PLAYER
         OPPONENT = Board.WHITE if PLAYER == Board.BLACK else Board.BLACK
 
@@ -211,3 +212,14 @@ class Board:
         self.board[3, 4] = self.board[4,3] = Board.BLACK
 
         self.black_disc_count = self.white_disc_count = 2
+
+    def check_game_over(self) -> bool:
+        possibleBlackMoves = self.all_legal_moves(Board.BLACK)
+        possibleWhiteMoves = self.all_legal_moves(Board.WHITE)
+
+        if not possibleBlackMoves or not possibleWhiteMoves:
+            return False
+        return True
+    
+    def evaluate_board(self) -> int:
+        return self.black_disc_count - self.white_disc_count
