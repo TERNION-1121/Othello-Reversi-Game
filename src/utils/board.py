@@ -222,4 +222,26 @@ class Board:
         return True
     
     def evaluate_board(self) -> int:
-        return self.black_disc_count - self.white_disc_count
+        '''Evaluate the board as per various heuristics.'''
+
+        # coin parity heuristic
+        coin_parity = 100 * (self.black_disc_count - self.white_disc_count) / (self.black_disc_count + self.white_disc_count)
+        
+        # mobility heuristic value
+        black_mobility = len(self.all_legal_moves(Board.BLACK))
+        white_mobility = len(self.all_legal_moves(Board.WHITE))
+        if black_mobility + white_mobility == 0:
+            actual_mobility = 0
+        else:
+            actual_mobility = 100 * (black_mobility - white_mobility) / (black_mobility + white_mobility)
+
+        # corner heuristic value
+        corners = (self.board[0, 0], self.board[0,7], self.board[7, 0], self.board[7, 7])
+        black_corners = sum(10 for coin in corners if coin == Board.BLACK)
+        white_corners = sum(-10 for coin in corners if coin == Board.WHITE)
+        if black_corners + white_corners == 0:
+            corner_value = 0
+        else:
+            corner_value = 100 * (black_corners - white_corners) / (black_corners + white_corners)
+
+        return coin_parity + actual_mobility + corner_value
