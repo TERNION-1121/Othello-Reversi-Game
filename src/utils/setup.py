@@ -206,7 +206,6 @@ class Application:
             Application.fade(self.screen, (self.endScreenDrawIMG, (725, 250)))
 
         Application.fade(self.screen, (self.endPromptIMG, (877, 420)))
-        print(self.game_board.all_legal_moves(Board.BLACK), self.game_board.all_legal_moves(Board.WHITE), sep='\n')
         self.game_end = True
     
     def computerPlayerTurn(self) -> None:
