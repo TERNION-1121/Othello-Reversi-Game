@@ -36,12 +36,17 @@ For a more comprehensive explanation of the game rules, check out this [link](ht
 It had been a long time since I had coded in Python, and I got reminded of Othello out of the blue. Thus I implemented the game in Python. 
 This not only got my `pygame` GUI skills freshen up, but it also was a great experience to design the board elements myself.
 
-### 🎯 Future Goals...
-
-Implementing the two-player, turn-by-turn game, was a relatively easy task. Yet the next thing to implement would be the Othello A.I., and that too with the MiniMax Algorithm.
-I hope to get done with it soon..!
-
 P.S. If you have got any suggestions/features to add, whether it's about the two-player gameplay, or about the Othello AI itself, I would be more than grateful to you for your contribution!
+
+<br>
+
+### 🎯 Game Modes
+
+#### ⚔ Two-Player Mode 
+Two players can play the game, alternating their turns.
+
+#### 🤖 Play with Computer
+Play with the computer! It makes use of the minimax algorithm with alpha-beta pruning. Currently it makes use of a really naive evaluation system, based on disc count.
 
 ### How to Play the Game 🎮
 1. Download the source code. (Either clone the repository or download the whole code from GitHub)
