@@ -112,7 +112,7 @@ class Application:
             self.running = False
             return
         
-        self.turn = 1
+        self.turn = Board.BLACK
         self.single_player = False
         self.displayed_choice = False
         self.game_end = False
