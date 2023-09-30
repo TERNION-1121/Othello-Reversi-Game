@@ -15,7 +15,6 @@ class Board:
                     ( 1,-1),    # upwards right
                 )
 
-
     def __init__(self) -> None:
         '''Initiliaze the Othello game board with a 8x8 numpy matrix'''
         self.board = np.array([0]*8, dtype = np.int8)   # initiliasing 1D array with the first row of 8 zeroes
@@ -55,22 +54,19 @@ class Board:
 
         legal_moves = []
         for dir in Board.DIRECTIONS:
-            row = r
-            col = c
             rowDir, colDir = dir
-
-            row += rowDir
-            col += colDir
+            row = r + rowDir
+            col = c + colDir
                 
-            if Board.checkCoordRange(row, col) is False or self.board[row][col] != OPPONENT:
+            if Board.checkCoordRange(row, col) is False or self.board[row, col] != OPPONENT:
                 continue
             
             row += rowDir
             col += colDir
-            while (Board.checkCoordRange(row, col) is True and self.board[row][col] == OPPONENT):
+            while (Board.checkCoordRange(row, col) is True and self.board[row, col] == OPPONENT):
                 row += rowDir
                 col += colDir
-            if (Board.checkCoordRange(row, col) is True and self.board[row][col] == Board.EMPTY):   # possible move
+            if (Board.checkCoordRange(row, col) is True and self.board[row, col] == Board.EMPTY):   # possible move
                 legal_moves.append((row, col))
 
         return legal_moves
@@ -80,10 +76,14 @@ class Board:
 
         OPPONENT = PLAYER * -1
         rowDir, colDir = direction
+
         row, col = initCoords
+        row += rowDir
+        col += colDir 
+
         r, c = endCoords
 
-        while (self.board[row][col] == OPPONENT) and (row != r and col != c):
+        while (self.board[row, col] == OPPONENT) and (row != r or col != c):
             self.board[row, col] = PLAYER
             row += rowDir
             col += colDir
@@ -96,20 +96,18 @@ class Board:
         
         for dir in Board.DIRECTIONS:
             rowDir, colDir = dir
-            r, c = (row, col)
+            r = row + rowDir
+            c = col + colDir
 
-            r += rowDir
-            c += colDir
-            
-            if Board.checkCoordRange(r, c) is False or self.board[r][c] != OPPONENT:
+            if Board.checkCoordRange(r, c) is False or self.board[r, c] != OPPONENT:
                 continue
             
             r += rowDir
             c += colDir
-            while (Board.checkCoordRange(r, c) is True and self.board[r][c] == OPPONENT):
+            while (Board.checkCoordRange(r, c) is True and self.board[r, c] == OPPONENT):
                 r += rowDir
                 c += colDir
-            if (Board.checkCoordRange(r, c) is True and self.board[r][c] == PLAYER):
+            if (Board.checkCoordRange(r, c) is True and self.board[r, c] == PLAYER):
                 self.flipDiscs(PLAYER, (row, col), (r, c), dir) 
                 
         # update disc counters
