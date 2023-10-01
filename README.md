@@ -61,3 +61,4 @@ Currently the algorithm makes use of the following heuristics for a position's e
    pip install -r requirements
    ```
 5. Navigate to the `src` directory, run the `main.py` file and play the game!
+> P.S. You can change color modes using the 'L' key!
