@@ -1,4 +1,5 @@
 from utils.board import Board
+from utils.colors import Colors
 from utils.minimax import find_best_move
 import pygame
 
@@ -16,30 +17,20 @@ class Application:
         # pygame initialisations
         self.screen = pygame.display.set_mode(  (Application.SCREEN_WIDTH, 
                                                  Application.SCREEN_HEIGHT  ))
-        self.screen.fill((255, 255, 255))
+        self.screen.fill(Colors.WHITE)
         pygame.display.flip()
 
         pygame.display.set_caption("Othello/Reversi")
 
         # image initialisations
-        self.boardIMG = pygame.image.load("images/Othello_Black_Side_Board.png")
-        self.blackDiscIMG = pygame.image.load("images/Black_Disc.png")
-        self.whiteDiscIMG = pygame.image.load("images/White_Disc.png")
+        self.boardIMG = pygame.image.load("images/Light-Mode/Othello_Black_Side_Board.png")
 
-        self.blackDiscCounterIMG = pygame.image.load("images/Large_Black_Disc.png")
-        self.whiteDiscCounterIMG = pygame.image.load("images/Large_White_Disc.png")
+        self.endScreenBlackIMG = pygame.image.load("images/Light-Mode/End_Screen_Black.png")
+        self.endScreenWhiteIMG = pygame.image.load("images/Light-Mode/End_Screen_White.png")
+        self.endScreenDrawIMG = pygame.image.load("images/Light-Mode/End_Screen_Draw.png")
+        self.endPromptIMG  = pygame.image.load("images/Light-Mode/End_Prompt.png")
 
-        self.possibleBlackMoveIMG = pygame.image.load("images/Black_Disc.png")
-        self.possibleWhiteMoveIMG = pygame.image.load("images/White_Disc.png")
-        pygame.Surface.set_alpha(self.possibleBlackMoveIMG, 50)
-        pygame.Surface.set_alpha(self.possibleWhiteMoveIMG, 50)
-
-        self.endScreenBlackIMG = pygame.image.load("images/End_Screen_Black.png")
-        self.endScreenWhiteIMG = pygame.image.load("images/End_Screen_White.png")
-        self.endScreenDrawIMG = pygame.image.load("images/End_Screen_Draw.png")
-        self.endPromptIMG  = pygame.image.load("images/End_Prompt.png")
-
-        self.choiceIMG = pygame.image.load("images/Othello_Game-mode_Choice.png")
+        self.choiceIMG = pygame.image.load("images/Light-Mode/Othello_Game-mode_Choice.png")
 
         # font initialisation
         self.discCountFont = pygame.font.Font("Gotham-Font/GothamLight.ttf", 40)
@@ -70,6 +61,13 @@ class Application:
                 pygame.time.delay(30)
             pygame.display.flip()
 
+    def drawBlackDisc(self, coords: tuple[int, int], radius: int, radius_diff = 0):
+        pygame.draw.circle(self.screen, Colors.BLACK, coords, radius)
+
+    def drawWhiteDisc(self, coords: tuple[int, int], radius: int, radius_diff = 0):
+        self.drawBlackDisc(coords, radius)
+        pygame.draw.circle(self.screen, Colors.WHITE, coords, radius - radius_diff)
+
     def handleMouseClick(self) -> None:
         '''Handle events following mouse click on the board'''
 
@@ -90,7 +88,7 @@ class Application:
             row, col = pos
             x = 100 + 75 * col
             y = 100 + 75 * row
-            pygame.draw.rect(self.screen, (255, 255, 255), pygame.Rect(x+4, y+4, 67, 67))
+            pygame.draw.rect(self.screen, Colors.WHITE, pygame.Rect(x+4, y+4, 67, 67))
 
         self.turn *= -1
     
@@ -105,7 +103,7 @@ class Application:
         # fade out the screen
         dummy_surface = pygame.Surface( (Application.SCREEN_WIDTH, 
                                             Application.SCREEN_HEIGHT  ))
-        dummy_surface.fill((255, 255, 255))
+        dummy_surface.fill(Colors.WHITE)
         Application.fade(self.screen, (dummy_surface, (0, 0)))
 
         if event.key == pygame.K_q:
@@ -118,9 +116,7 @@ class Application:
         self.game_end = False
         self.game_board.reset_board()
 
-        self.screen.blit(self.boardIMG, (0,0))
-        self.screen.blit(self.blackDiscCounterIMG, (775, 475))
-        self.screen.blit(self.whiteDiscCounterIMG, (950, 475))
+        self.displayInitialBoardPos()
         self.last_move = (20, 20)
 
     def displayDiscs(self) -> None:
@@ -128,36 +124,33 @@ class Application:
 
         for row in range(8):
             for col in range(8):
+                x = 137.5 + 75 * col
+                y = 137.5 + 75 * row
                 if self.game_board.board[row, col] == Board.BLACK:
-                    x = 100 + 75 * col
-                    y = 100 + 75 * row
-                    self.screen.blit(self.blackDiscIMG, (x,y))
+                    self.drawBlackDisc((x, y), 32.5)
 
                 elif self.game_board.board[row, col] == Board.WHITE:
-                    x = 100 + 75 * col
-                    y = 100 + 75 * row
-                    self.screen.blit(self.whiteDiscIMG, (x,y))
+                    self.drawWhiteDisc((x, y), 32.5, 2.5)
     
     def markLastMove(self) -> None:
         '''Mark the last move made on the game board'''
 
         r, c = self.last_move
 
-        RED = (255, 0, 0)
         x = c * 75 + 100 + 75/2
         y = r * 75 + 100 + 75/2
-        pygame.draw.circle(surface=self.screen, color=RED, center=(x, y), radius=5)
+        pygame.draw.circle(self.screen, Colors.RED, (x, y), radius=5)
 
     def displayScore(self) -> None:
         '''Blit the score of each player during the game'''
 
         dummy_surface = pygame.Surface((60, 40))
-        dummy_surface.fill((255, 255, 255))
+        dummy_surface.fill(Colors.WHITE)
         self.screen.blit(dummy_surface, (885, 510))
         self.screen.blit(dummy_surface, (1060, 510))
 
-        black_disc_count = self.discCountFont.render(f"{self.game_board.black_disc_count}", False, (0, 0, 0))
-        white_disc_count = self.discCountFont.render(f"{self.game_board.white_disc_count}", False, (0, 0, 0))
+        black_disc_count = self.discCountFont.render(f"{self.game_board.black_disc_count}", False, Colors.BLACK)
+        white_disc_count = self.discCountFont.render(f"{self.game_board.white_disc_count}", False, Colors.BLACK)
         self.screen.blit(black_disc_count, (885, 510))
         self.screen.blit(white_disc_count, (1060, 510))
 
@@ -184,12 +177,20 @@ class Application:
         else:
             self.hasWhiteForfeited = False
         
-        possibleMoveIMG = self.possibleBlackMoveIMG if self.turn == Board.BLACK else self.possibleWhiteMoveIMG
+        surface = pygame.Surface((75, 75), pygame.SRCALPHA)
         for pos in self.possible_moves:
             r, c = pos
             x = 100 + 75 * c
             y = 100 + 75 * r
-            self.screen.blit(possibleMoveIMG, (x, y))
+
+            if self.turn == Board.BLACK:
+                pygame.draw.circle(surface,(*Colors.BLACK, 50),(37.5, 37.5), 32.5)
+
+            elif self.turn == Board.WHITE:
+                pygame.draw.circle(surface,(*Colors.BLACK, 50),(37.5, 37.5), 32.5)
+                pygame.draw.circle(surface,(*Colors.WHITE, 50),(37.5, 37.5), 30)
+
+            self.screen.blit(surface, (x, y))
             
         self.shown_moves = not (self.hasBlackForfeited if self.turn == Board.BLACK else self.hasWhiteForfeited)
 
@@ -233,7 +234,7 @@ class Application:
 
         dummy_surface = pygame.Surface( (Application.SCREEN_WIDTH, 
                                             Application.SCREEN_HEIGHT  ))
-        dummy_surface.fill((255, 255, 255))
+        dummy_surface.fill(Colors.WHITE)
         Application.fade(self.screen, (dummy_surface, (0, 0)))
 
         self.displayInitialBoardPos()
@@ -242,8 +243,10 @@ class Application:
         '''Blitting initial board position on screen'''
 
         self.screen.blit(self.boardIMG, (0,0))
-        self.screen.blit(self.blackDiscCounterIMG, (775, 475))
-        self.screen.blit(self.whiteDiscCounterIMG, (950, 475))
+
+        self.drawBlackDisc((825, 525), 50)
+        self.drawWhiteDisc((1000, 525), 50, 5)
+
         pygame.display.flip()
 
     def game_loop(self) -> None:
