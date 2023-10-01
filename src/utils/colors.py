@@ -1,6 +1,6 @@
 class Colors():
     CHARCOAL = (64, 64, 64)
-    DARK_CHARCOAL = (54, 48, 48)
+    DARK_CHARCOAL = (48, 50, 48)
     RED = (255, 0, 0)
     GREEN = (0, 255, 0)
     BLUE = (0, 0, 255)
