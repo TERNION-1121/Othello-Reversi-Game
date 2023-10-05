@@ -13,7 +13,7 @@ class Application:
     DARK = 0
 
     def __init__(self) -> None:
-        '''Initiliase the Application Object with the necessary initialisations.'''
+        '''Initialise the Application Object with the necessary initialisations.'''
 
         self.game_board = Board()
 

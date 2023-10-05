@@ -150,8 +150,8 @@ class Board:
 
         # corner heuristic value
         corners = (self.board[0, 0], self.board[0,7], self.board[7, 0], self.board[7, 7])
-        black_corners = sum(10 for coin in corners if coin == Board.BLACK)
-        white_corners = sum(-10 for coin in corners if coin == Board.WHITE)
+        black_corners = sum(+20 for coin in corners if coin == Board.BLACK)
+        white_corners = sum(-20 for coin in corners if coin == Board.WHITE)
         if black_corners + white_corners == 0:
             corner_value = 0
         else:
