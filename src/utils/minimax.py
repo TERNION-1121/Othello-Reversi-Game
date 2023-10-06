@@ -12,7 +12,6 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
             if position.board[row, col] == Board.EMPTY:
 
                 position_deepcopy = deepcopy(position) 
-                position_deepcopy.board[row, col] = Board.BLACK
                 position_deepcopy.set_discs(row, col, Board.BLACK)
 
                 opponents_moves = position.all_legal_moves(Board.WHITE)
@@ -32,7 +31,6 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
         if position.board[row, col] == Board.EMPTY:
 
             position_deepcopy = deepcopy(position) 
-            position_deepcopy.board[row, col] = Board.WHITE
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
             opponents_moves = position.all_legal_moves(Board.BLACK)
@@ -54,7 +52,6 @@ def find_best_move(position: Board) -> tuple[int, int]:
         if position.board[row, col] == Board.EMPTY:
 
             position_deepcopy = deepcopy(position) # create a deep copy of the board position
-            position_deepcopy.board[row, col] = Board.WHITE
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
             currentEval = minimax(position_deepcopy, 5, float('-inf'), float('inf'), True)
