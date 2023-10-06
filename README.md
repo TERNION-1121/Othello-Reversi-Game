@@ -53,6 +53,8 @@ Currently the algorithm makes use of the following heuristics for a position's e
 - Mobility
 - Corner Values
 
+> Thanks to [@Zhe Xun](https://github.com/HersheyZinc) for their help in improving the A.I Player's minimax algorithm!
+
 ### How to Play the Game 🎮
 1. Download the source code. (Either clone the repository or download the whole code from GitHub)
 2. Make sure to install Python3 on your Computer along with `pip`. (Python3.10+ is required)
