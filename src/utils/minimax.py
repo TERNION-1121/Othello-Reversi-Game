@@ -1,4 +1,5 @@
 from utils.board import Board
+from copy import deepcopy
 
 def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlayer: bool) -> int:
     if depth == 0 or position.check_game_over() is True:
@@ -9,32 +10,34 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
         legal_moves = position.all_legal_moves(Board.BLACK)
         for row, col in legal_moves:
             if position.board[row, col] == Board.EMPTY:
-                position.board[row, col] = Board.BLACK
+
+                position_deepcopy = deepcopy(position) 
+                position_deepcopy.set_discs(row, col, Board.BLACK)
 
                 opponents_moves = position.all_legal_moves(Board.WHITE)
-                eval = minimax(position, depth - 1, alpha, beta, len(opponents_moves) == 0)
+                eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) == 0)
                 maxEval = max(maxEval, eval)
 
                 alpha = max(alpha, eval)
-                position.board[row, col] = Board.EMPTY
                 if beta <= alpha:
                     break
 
-                return maxEval
+        return maxEval
 
     # else minimizing player's turn
     minEval = float('+inf')
     legal_moves = position.all_legal_moves(Board.WHITE)
     for row, col in legal_moves:
         if position.board[row, col] == Board.EMPTY:
-            position.board[row, col] = Board.WHITE
+
+            position_deepcopy = deepcopy(position) 
+            position_deepcopy.set_discs(row, col, Board.WHITE)
 
             opponents_moves = position.all_legal_moves(Board.BLACK)
-            eval = minimax(position, depth - 1, alpha, beta, len(opponents_moves) != 0)
+            eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) != 0)
             minEval = min(minEval, eval)
 
             beta = min(beta, eval)
-            position.board[row, col] = Board.EMPTY
             if beta <= alpha:
                 break
 
@@ -47,11 +50,11 @@ def find_best_move(position: Board) -> tuple[int, int]:
     legal_moves = position.all_legal_moves(Board.WHITE)
     for row, col in legal_moves:
         if position.board[row, col] == Board.EMPTY:
-            position.board[row, col] = Board.WHITE
 
-            currentEval = minimax(position, 3, float('-inf'), float('inf'), False)
+            position_deepcopy = deepcopy(position) # create a deep copy of the board position
+            position_deepcopy.set_discs(row, col, Board.WHITE)
 
-            position.board[row, col] = Board.EMPTY
+            currentEval = minimax(position_deepcopy, 5, float('-inf'), float('inf'), True)
 
             if currentEval <= bestEval:
                 bestMove = (row, col)
