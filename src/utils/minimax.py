@@ -54,7 +54,7 @@ def find_best_move(position: Board) -> tuple[int, int]:
             position_deepcopy = deepcopy(position) # create a deep copy of the board position
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
-            currentEval = minimax(position_deepcopy, 5, float('-inf'), float('inf'), True)
+            currentEval = minimax(position_deepcopy, 3, float('-inf'), float('inf'), True)
 
             if currentEval <= bestEval:
                 bestMove = (row, col)
