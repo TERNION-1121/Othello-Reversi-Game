@@ -130,7 +130,7 @@ class Board:
         possibleBlackMoves = self.all_legal_moves(Board.BLACK)
         possibleWhiteMoves = self.all_legal_moves(Board.WHITE)
 
-        if not possibleBlackMoves or not possibleWhiteMoves:
+        if possibleBlackMoves or possibleWhiteMoves:
             return False
         return True
     
