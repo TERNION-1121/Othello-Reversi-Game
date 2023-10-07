@@ -14,7 +14,7 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
                 position_deepcopy = deepcopy(position) 
                 position_deepcopy.set_discs(row, col, Board.BLACK)
 
-                opponents_moves = position.all_legal_moves(Board.WHITE)
+                opponents_moves = position_deepcopy.all_legal_moves(Board.WHITE)
                 eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) == 0)
                 maxEval = max(maxEval, eval)
 
@@ -33,7 +33,7 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
             position_deepcopy = deepcopy(position) 
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
-            opponents_moves = position.all_legal_moves(Board.BLACK)
+            opponents_moves = position_deepcopy.all_legal_moves(Board.BLACK)
             eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) != 0)
             minEval = min(minEval, eval)
 
