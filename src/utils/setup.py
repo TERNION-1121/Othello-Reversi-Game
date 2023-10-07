@@ -53,11 +53,7 @@ class Application:
         self.game_end = False
         self.shown_moves = False
 
-        self.hasBlackForfeited = False
-        self.hasWhiteForfeited = False
-
         self.turn = Board.BLACK
-        self.possible_moves = []
         self.last_move = (20, 20)
 
     @staticmethod
@@ -95,14 +91,14 @@ class Application:
         r = my // 75
         c = mx // 75
 
-        if (r, c) not in self.possible_moves:   return
+        possible_moves = self.game_board.all_legal_moves(self.turn)
+        if (r, c) not in possible_moves:   return
 
         self.last_move = (r, c)
         self.game_board.set_discs(r, c, self.turn)
-        self.possible_moves.remove((r,c))
         self.shown_moves = False
 
-        for pos in self.possible_moves:
+        for pos in possible_moves:
             row, col = pos
             x = 100 + 75 * col
             y = 100 + 75 * row
@@ -158,6 +154,7 @@ class Application:
         x = c * 75 + 100 + 75/2
         y = r * 75 + 100 + 75/2
         pygame.draw.circle(self.screen, Colors.RED, (x, y), radius=5)
+        pygame.display.flip()
 
     def displayScore(self) -> None:
         '''Blit the score of each player during the game'''
@@ -172,6 +169,8 @@ class Application:
         white_disc_count = self.discCountFont.render(f"{self.game_board.white_disc_count}", False, text_color)
         self.screen.blit(black_disc_count, (885, 510))
         self.screen.blit(white_disc_count, (1060, 510))
+        
+        pygame.display.flip()
 
     def displayLegalMoves(self) -> None:
         '''Display all the possible legal moves for the player with the current turn.'''
@@ -179,25 +178,16 @@ class Application:
         if self.shown_moves:    # possible moves are already displayed
             return
         
-        self.possible_moves = list(self.game_board.all_legal_moves(self.turn))
-        if self.possible_moves == []:
-            if self.turn == Board.BLACK:
-                self.hasBlackForfeited = True
-            else:
-                self.hasWhiteForfeited = True
-            self.shown_moves = not (self.hasBlackForfeited if self.turn == Board.BLACK else self.hasWhiteForfeited)
+        possible_moves = self.game_board.all_legal_moves(self.turn)
+        if not possible_moves:
+            self.shown_moves = False
             self.turn *= -1
             return
         
         # else there are new possible moves to be displayed
-
-        if self.turn == Board.BLACK:
-            self.hasBlackForfeited = False
-        else:
-            self.hasWhiteForfeited = False
         
         surface = pygame.Surface((75, 75), pygame.SRCALPHA) # transparent surface to draw possible moves on
-        for pos in self.possible_moves:
+        for pos in possible_moves:
             r, c = pos
             x = 100 + 75 * c
             y = 100 + 75 * r
@@ -211,7 +201,7 @@ class Application:
 
             self.screen.blit(surface, (x, y))
             
-        self.shown_moves = not (self.hasBlackForfeited if self.turn == Board.BLACK else self.hasWhiteForfeited)
+        self.shown_moves = True
 
     def gameOverScreen(self) -> None:
         '''Display the game over screen in accordance with the game result.'''
@@ -232,14 +222,19 @@ class Application:
         '''Code to run when it is computer player's turn.'''
         
         r, c = find_best_move(self.game_board)
+        self.shown_moves = False
+        
         if (r,c) == (20, 20):
-            self.hasWhiteForfeited = True
-            self.shown_moves = not self.hasWhiteForfeited
-        else:
-            self.last_move = (r, c)
-            self.game_board.set_discs(r, c, self.turn)
-            self.shown_moves = False
+            return
+        
+        self.last_move = (r, c)
+        self.game_board.set_discs(r, c, self.turn)
         self.turn *= -1
+
+        # update board visuals
+        self.displayDiscs()
+        self.markLastMove()
+        self.displayScore()
 
     def handleGameModeChoice(self, event) -> None:
         '''Handle the events at the initial screen.'''
@@ -266,6 +261,18 @@ class Application:
         self.drawBlackDisc((825, 525), 50, 5)
         self.drawWhiteDisc((1000, 525), 50, 5)
 
+    def switch_theme(self) -> None:
+        '''Switch color modes b/w Light and Dark during the game.'''
+        
+        self.theme = not self.theme # switch themes
+
+        # redisplay last board position
+        self.displayInitialBoardPos()
+        self.shown_moves = False
+        self.displayDiscs()
+        self.displayLegalMoves()
+        self.shown_moves = False
+
     def game_loop(self) -> None:
         '''Game loop to run the application.'''
 
@@ -274,13 +281,7 @@ class Application:
             for event in pygame.event.get():
 
                 if not self.game_end and event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-                    self.theme = not self.theme # switch themes
-                    # redisplay last board position
-                    self.displayInitialBoardPos()
-                    self.shown_moves = False
-                    self.displayDiscs()
-                    self.displayLegalMoves()
-                    self.shown_moves = False
+                    self.switch_theme()
 
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -301,18 +302,18 @@ class Application:
             if self.game_end:
                 continue  
             
-            if self.single_player and self.turn == Board.WHITE:
-                self.computerPlayerTurn()
-                
             self.displayDiscs()
             
             self.markLastMove()
 
-            self.displayLegalMoves()
-
             self.displayScore()
 
-            if self.hasBlackForfeited and self.hasWhiteForfeited:
+            if self.single_player and self.turn == Board.WHITE:
+                self.computerPlayerTurn()
+
+            self.displayLegalMoves()
+
+            if self.game_board.check_game_over() is True:
                 self.gameOverScreen()
 
         pygame.quit()

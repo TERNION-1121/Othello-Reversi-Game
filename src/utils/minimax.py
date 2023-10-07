@@ -15,7 +15,7 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
                 position_deepcopy.set_discs(row, col, Board.BLACK)
 
                 opponents_moves = position_deepcopy.all_legal_moves(Board.WHITE)
-                eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) == 0)
+                eval = minimax(position_deepcopy, depth - 1, alpha, beta, opponents_moves == set())
                 maxEval = max(maxEval, eval)
 
                 alpha = max(alpha, eval)
@@ -34,7 +34,7 @@ def minimax(position: Board, depth: int, alpha: int, beta: int, isMaximizingPlay
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
             opponents_moves = position_deepcopy.all_legal_moves(Board.BLACK)
-            eval = minimax(position_deepcopy, depth - 1, alpha, beta, len(opponents_moves) != 0)
+            eval = minimax(position_deepcopy, depth - 1, alpha, beta, opponents_moves != set())
             minEval = min(minEval, eval)
 
             beta = min(beta, eval)
@@ -54,7 +54,8 @@ def find_best_move(position: Board) -> tuple[int, int]:
             position_deepcopy = deepcopy(position) # create a deep copy of the board position
             position_deepcopy.set_discs(row, col, Board.WHITE)
 
-            currentEval = minimax(position_deepcopy, 3, float('-inf'), float('inf'), True)
+            opponents_moves = position_deepcopy.all_legal_moves(Board.BLACK)
+            currentEval = minimax(position_deepcopy, 3, float('-inf'), float('inf'), opponents_moves != set())
 
             if currentEval <= bestEval:
                 bestMove = (row, col)
